@@ -1,24 +1,11 @@
-# Simple calculator
-function calc() {
-	local result="";
-	result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')";
-	#                       └─ default (when `--mathlib` is used) is 20
-	#
-	if [[ "$result" == *.* ]]; then
-		# improve the output for decimal numbers
-		printf "$result" |
-		sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
-		    -e 's/^-\./-0./'      `# add "0" for cases like "-.5"`\
-		    -e 's/0*$//;s/\.$//';  # remove trailing zeros
-	else
-		printf "$result";
-	fi;
-	printf "\n";
+# Create a new directory and enter it
+function md() {
+	mkdir -p "$@" && cd "$@";
 }
 
-# Create a new directory and enter it
-function mkd() {
-	mkdir -p "$@" && cd "$@";
+# find shorthand
+function f() {
+    find . -name "$1"
 }
 
 # Change working directory to the top-most Finder window location
@@ -54,6 +41,44 @@ function targz() {
 	echo "${tmpFile}.gz created successfully.";
 }
 
+# Extract archives - use: extract <file>
+# Based on http://dotfiles.org/~pseup/.bashrc
+function extract() {
+	if [ -f "$1" ] ; then
+		local filename=$(basename "$1")
+		local foldername="${filename%%.*}"
+		local fullpath=`perl -e 'use Cwd "abs_path";print abs_path(shift)' "$1"`
+		local didfolderexist=false
+		if [ -d "$foldername" ]; then
+			didfolderexist=true
+			read -p "$foldername already exists, do you want to overwrite it? (y/n) " -n 1
+			echo
+			if [[ $REPLY =~ ^[Nn]$ ]]; then
+				return
+			fi
+		fi
+		mkdir -p "$foldername" && cd "$foldername"
+		case $1 in
+			*.tar.bz2) tar xjf "$fullpath" ;;
+			*.tar.gz) tar xzf "$fullpath" ;;
+			*.tar.xz) tar Jxvf "$fullpath" ;;
+			*.tar.Z) tar xzf "$fullpath" ;;
+			*.tar) tar xf "$fullpath" ;;
+			*.taz) tar xzf "$fullpath" ;;
+			*.tb2) tar xjf "$fullpath" ;;
+			*.tbz) tar xjf "$fullpath" ;;
+			*.tbz2) tar xjf "$fullpath" ;;
+			*.tgz) tar xzf "$fullpath" ;;
+			*.txz) tar Jxvf "$fullpath" ;;
+			*.zip) unzip "$fullpath" ;;
+			*) echo "'$1' cannot be extracted via extract()" && cd .. && ! $didfolderexist && rm -r "$foldername" ;;
+		esac
+	else
+		echo "'$1' is not a valid file"
+	fi
+}
+
+
 # Determine size of a file or total size of a directory
 function fs() {
 	if du -b /dev/null > /dev/null 2>&1; then
@@ -66,6 +91,30 @@ function fs() {
 	else
 		du $arg .[^.]* *;
 	fi;
+}
+
+# git log with per-commit cmd-clickable GitHub URLs (iTerm)
+function gf() {
+  local remote="$(git remote -v | awk '/^origin.*\(push\)$/ {print $2}')"
+  [[ "$remote" ]] || return
+  local user_repo="$(echo "$remote" | perl -pe 's/.*://;s/\.git$//')"
+  git log $* --name-status --color | awk "$(cat <<AWK
+    /^.*commit [0-9a-f]{40}/ {sha=substr(\$2,1,7)}
+    /^[MA]\t/ {printf "%s\thttps://github.com/$user_repo/blob/%s/%s\n", \$1, sha, \$2; next}
+    /.*/ {print \$0}
+AWK
+  )" | less -F
+}
+
+# Syntax-highlight JSON strings or files
+function json() {
+	if [ -p /dev/stdin ]; then
+		# piping, e.g. `echo '{"foo":42}' | json`
+		python -mjson.tool | pygmentize -l javascript
+	else
+		# e.g. `json '{"foo":42}'`
+		python -mjson.tool <<< "$*" | pygmentize -l javascript
+	fi
 }
 
 # Use Git’s colored diff when available
