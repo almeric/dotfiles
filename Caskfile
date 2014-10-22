@@ -8,12 +8,12 @@ tap caskroom/versions
 cask install alfred 					2> /dev/null
 #cask install divvy 					2> /dev/null
 cask install dropbox 					2> /dev/null
-cask install intellij-idea-ultimate-eap 2> /dev/null
-cask install intellij-idea 				2> /dev/null
+#cask install intellij-idea-ultimate-eap 2> /dev/null
+#cask install intellij-idea 				2> /dev/null
 #cask install gyazo 					2> /dev/null
 #cask install onepassword 				2> /dev/null
-#cask install rescuetime 				2> /dev/null
-# cask install flux 					2> /dev/null
+cask install rescuetime 				2> /dev/null
+cask install flux 					2> /dev/null
 
 # dev
 cask install iterm2 					2> /dev/null
