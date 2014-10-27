@@ -14,6 +14,7 @@ cask install dropbox 					2> /dev/null
 #cask install onepassword 				2> /dev/null
 cask install rescuetime 				2> /dev/null
 cask install flux 					2> /dev/null
+cask install adium					2> /dev/null
 
 # dev
 cask install iterm2 					2> /dev/null
