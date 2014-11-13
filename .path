@@ -3,3 +3,4 @@ export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="/usr/local/bin:/usr/local/sbin:~/bin:$PATH"
 export PATH="~/.composer/vendor/bin:$PATH"
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PATH="/Users/almeric/android-sdk/platform-tools:$PATH"
