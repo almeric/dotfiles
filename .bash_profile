@@ -10,7 +10,7 @@ done;
 unset file;
 
 # init z   https://github.com/rupa/z
-. ~/code/z/z.sh
+. ~/utils/z/z.sh
 
 # init rvm
 source ~/.rvm/scripts/rvm
