@@ -21,11 +21,11 @@
 		fi \
 	}; f"
 
-
-
+       lol = log --graph --decorate --pretty=oneline --abbrev-commit
+       lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 [color]
 	ui = always
-
+        interactive = auto
 [core]
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
